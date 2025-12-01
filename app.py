@@ -210,7 +210,7 @@ def generate_pdf_report(title, author, sections):
                     section['content'].write_image(tmpfile.name, engine="kaleido", scale=2)
                     pdf.image(tmpfile.name, w=170)
                     pdf.ln(5)
-                # Cleanup handled by OS mostly, but good practice to delete if possible
+                # Cleanup handled by OS mostly
                 try: os.remove(tmpfile.name)
                 except: pass
             except Exception as e:
