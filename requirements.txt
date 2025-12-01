@@ -15,4 +15,4 @@ fpdf
 jinja2
 pingouin
 pyreadstat
-kaleido
+kaleido==0.2.1
