@@ -37,7 +37,7 @@ st.set_page_config(
 )
 
 APP_NAME = "MedStat Pro"
-VERSION = "3.1 (PDF Support)"
+VERSION = "3.2 (Stability Fixes)"
 
 # Custom CSS for Professional UI
 st.markdown("""
@@ -412,7 +412,17 @@ elif step == "4. Exploratory Viz":
     y = None if y_var == "None" else y_var
     color = None if color_var == "None" else color_var
     
-    if viz_type == "Scatter Plot" and y: fig = px.scatter(df, x=x_var, y=y, color=color, trendline="ols", template="plotly_white")
+    if viz_type == "Scatter Plot" and y:
+        # FIX: Check if axes are numeric before applying trendline
+        is_x_num = pd.api.types.is_numeric_dtype(df[x_var])
+        is_y_num = pd.api.types.is_numeric_dtype(df[y])
+        
+        if is_x_num and is_y_num:
+            fig = px.scatter(df, x=x_var, y=y, color=color, trendline="ols", template="plotly_white")
+        else:
+            fig = px.scatter(df, x=x_var, y=y, color=color, template="plotly_white")
+            st.caption("⚠️ Trendline disabled: X and Y axes must be numeric.")
+            
     elif viz_type == "Box Plot": fig = px.box(df, x=x_var, y=y, color=color, template="plotly_white")
     elif viz_type == "Violin Plot": fig = px.violin(df, x=x_var, y=y, color=color, box=True, template="plotly_white")
     elif viz_type == "Histogram": fig = px.histogram(df, x=x_var, color=color, marginal="box", template="plotly_white")
